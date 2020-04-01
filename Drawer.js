@@ -53,36 +53,51 @@ const Screens = ({ navigation, style }) => {
 
 const DrawerContent = props => {
   return (
-    <DrawerContentScrollView {...props}>
+    <DrawerContentScrollView {...props} contentContainerStyle={{ flex: 1 }}>
       <Block>
         {/* add avatar */}
-        <Block flex={0.4} margin={20} bottom>
+        <Block flex={0.4} margin={20}>
           <Image
             source={require("./assets/logo.png")}
             style={{ width: 60, height: 60 }}
             resizeMode="center"
           />
-          <Text title>Expenze</Text>
-          <Text size={9}>contact@expenze.com</Text>
+          <Text white title marginTop="2x">
+            Expenze
+          </Text>
+          <Text white size={9} marginTop>
+            contact@expenze.com
+          </Text>
         </Block>
         {/* add icons to items */}
+        <Block>
+          <DrawerItem
+            label="Dashboard"
+            labelStyle={{ marginLeft: -16, color: "white" }}
+            onPress={() => props.navigation.navigate("Dashboard")}
+            icon={() => <AntDesign name="dashboard" size={16} color="white" />}
+          />
+          <DrawerItem
+            label="Messages"
+            labelStyle={{ marginLeft: -16, color: "white" }}
+            onPress={() => props.navigation.navigate("Messages")}
+            icon={() => <AntDesign name="message1" size={16} color="white" />}
+          />
+          <DrawerItem
+            label="Contact"
+            labelStyle={{ marginLeft: -16, color: "white" }}
+            onPress={() => props.navigation.navigate("Contact")}
+            icon={() => <AntDesign name="phone" size={16} color="white" />}
+          />
+        </Block>
+      </Block>
+      {/* add logout button */}
+      <Block noflex top>
         <DrawerItem
-          label="Dashboard"
-          labelStyle={{ marginLeft: -16 }}
-          onPress={() => props.navigation.navigate("Dashboard")}
-          icon={() => <AntDesign name="dashboard" size={16} />}
-        />
-        <DrawerItem
-          label="Messages"
-          labelStyle={{ marginLeft: -16 }}
-          onPress={() => props.navigation.navigate("Messages")}
-          icon={() => <AntDesign name="message1" size={16} />}
-        />
-        <DrawerItem
-          label="Contact"
-          labelStyle={{ marginLeft: -16 }}
-          onPress={() => props.navigation.navigate("Contact")}
-          icon={() => <AntDesign name="phone" size={16} />}
+          label="Logout"
+          labelStyle={{ marginLeft: -16, color: "white" }}
+          onPress={() => alert("Are you sure?")}
+          icon={() => <AntDesign name="logout" size={16} color="white" />}
         />
       </Block>
     </DrawerContentScrollView>
@@ -97,36 +112,46 @@ export default () => {
     outputRange: [1, 0.8]
   });
 
-  const screenStyles = { transform: [{ scale }] };
+  // animate the borderRadius of the scene screens
+  const borderRadius = Animated.interpolate(progress, {
+    inputRange: [0, 1],
+    outputRange: [0, 10]
+  });
+
+  const screenStyles = { borderRadius, transform: [{ scale }] };
 
   return (
-    <Drawer.Navigator
-      // the drawer screen should be animated slide
-      drawerType="slide"
-      overlayColor="transparent"
-      initialRouteName="Dashboard"
-      drawerContentOptions={{
-        activeBackgroundColor: "transparent",
-        activeTintColor: "green",
-        inactiveTintColor: "green"
-      }}
-      // set the scene background to transparent
-      sceneContainerStyle={{ backgroundColor: "transparent" }}
-    
-      drawerContent={props => {
-        setProgress(props.progress);
-        return <DrawerContent {...props} />;
-      }}
-    >
-      <Drawer.Screen name="Screens">
-        {props => <Screens {...props} style={screenStyles} />}
-      </Drawer.Screen>
-    </Drawer.Navigator>
+    <Block black>
+      <Drawer.Navigator
+        // the drawer screen should be animated slide
+        drawerType="slide"
+        overlayColor="transparent"
+        initialRouteName="Dashboard"
+        drawerStyle={{ width: "50%", backgroundColor: "transparent" }}
+        contentContainerStyle={{ flex: 1 }}
+        drawerContentOptions={{
+          activeBackgroundColor: "transparent",
+          activeTintColor: "green",
+          inactiveTintColor: "green"
+        }}
+        // set the scene background to transparent
+        sceneContainerStyle={{ backgroundColor: "transparent" }}
+        drawerContent={props => {
+          setProgress(props.progress);
+          return <DrawerContent {...props} />;
+        }}
+      >
+        <Drawer.Screen name="Screens">
+          {props => <Screens {...props} style={screenStyles} />}
+        </Drawer.Screen>
+      </Drawer.Navigator>
+    </Block>
   );
 };
 
 const styles = StyleSheet.create({
   stack: {
-    flex: 1
+    flex: 1,
+    overflow: "hidden"
   }
 });
